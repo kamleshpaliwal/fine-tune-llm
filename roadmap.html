@@ -1,0 +1,239 @@
+<title>T4 Alignment Roadmap</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a header with one overall bar, a row of phase tiles that work as a map, then one expandable list of steps per phase. */
+:root {
+  --bg: #f6f7f5;
+  --surface: #ffffff;
+  --line: #dfe3de;
+  --text: #1c2420;
+  --muted: #5d6a63;
+  --accent: #1f6f5c;
+  --accent-soft: #dcefe9;
+  --done: #2f7d4f;
+  --doing: #b4690e;
+  --todo: #8a948e;
+  --done-soft: #dff1e5;
+  --doing-soft: #fbead2;
+  --todo-soft: #ecefed;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-head: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101512; --surface: #171d19; --line: #2a332d; --text: #e7ece8; --muted: #98a59d;
+    --accent: #5cc4a6; --accent-soft: #1b3a31;
+    --done: #6fcf93; --doing: #e8a95a; --todo: #78847d;
+    --done-soft: #1b3326; --doing-soft: #3a2c15; --todo-soft: #222a25;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101512; --surface: #171d19; --line: #2a332d; --text: #e7ece8; --muted: #98a59d;
+  --accent: #5cc4a6; --accent-soft: #1b3a31;
+  --done: #6fcf93; --doing: #e8a95a; --todo: #78847d;
+  --done-soft: #1b3326; --doing-soft: #3a2c15; --todo-soft: #222a25;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--font-body); font-size: 15px; line-height: 1.55;
+  padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 980px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+h1, h2 { font-family: var(--font-head); text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(26px, 5vw, 38px); line-height: 1.1; letter-spacing: -0.02em; }
+.lede { color: var(--muted); max-width: 62ch; margin: 8px 0 0; }
+.label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+.overall { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; }
+.overall-top { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: baseline; justify-content: space-between; }
+.big { font-family: var(--font-head); font-size: 34px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.big small { font-size: 16px; font-weight: 500; color: var(--muted); }
+.bar { height: 10px; border-radius: 6px; background: var(--todo-soft); overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--done); border-radius: 6px; }
+.note { color: var(--muted); font-size: 13px; margin: 0; }
+
+.map { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; text-decoration: none; color: inherit; min-width: 0; }
+.tile:hover { border-color: var(--accent); }
+.tile.active { border-color: var(--doing); }
+.tile .name { font-weight: 600; font-size: 14px; line-height: 1.3; }
+.tile .meta { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.tile .bar { height: 6px; }
+
+.phase { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.phase summary { list-style: none; cursor: pointer; padding: 16px 18px; display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; }
+.phase summary::-webkit-details-marker { display: none; }
+.phase summary::before { content: "+"; font-family: var(--font-mono); color: var(--muted); width: 14px; }
+.phase[open] summary::before { content: "\2212"; }
+.phase summary:focus-visible, .tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.phase h2 { font-size: 18px; flex: 1 1 260px; min-width: 0; }
+.phase .sum { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.steps { border-top: 1px solid var(--line); }
+.step { display: grid; grid-template-columns: 112px 44px minmax(0, 1fr) 92px 62px; gap: 6px 14px; align-items: baseline; padding: 11px 18px; border-bottom: 1px solid var(--line); }
+.step:last-child { border-bottom: 0; }
+.step.head { padding-block: 8px; }
+.step .what { min-width: 0; overflow-wrap: anywhere; }
+.step .num { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.chip { font-family: var(--font-mono); font-size: 11px; padding: 2px 8px; border-radius: 999px; white-space: nowrap; justify-self: start; }
+.chip.done { background: var(--done-soft); color: var(--done); }
+.chip.doing { background: var(--doing-soft); color: var(--doing); }
+.chip.todo { background: var(--todo-soft); color: var(--muted); }
+.phase-note { margin: 0; padding: 10px 18px 14px; color: var(--muted); font-size: 13px; }
+
+@media (max-width: 640px) {
+  .step { grid-template-columns: auto auto 1fr; }
+  .step.head { display: none; }
+  .step .what { grid-column: 1 / -1; }
+  .step .est, .step .act { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+  .step .est { grid-column: 1 / 3; }
+  .step .est::before { content: "est "; }
+  .step .act::before { content: "actual "; }
+}
+.foot { color: var(--muted); font-size: 13px; display: flex; flex-direction: column; gap: 6px; }
+@media (prefers-reduced-motion: no-preference) { .bar > i { transition: width .4s ease; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="label">Qwen2.5-1.5B &middot; free T4 on Kaggle &middot; PEFT only</div>
+    <h1>T4 Alignment Roadmap</h1>
+    <p class="lede">From a Stack Exchange dataset to a small technical Q&amp;A assistant, trained and aligned on one free 16 GB T4. Status comes from <code>PLAN.md</code>, last updated 2026-11-19.</p>
+  </header>
+
+  <section class="overall" aria-label="Overall progress">
+    <div class="overall-top">
+      <div class="big"><span id="doneCount">0</span> <small>of <span id="totalCount">0</span> steps done</small></div>
+      <div class="label">Estimate: about 33&ndash;46 sessions of ~2 h</div>
+    </div>
+    <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="overallBar"><i id="overallFill" style="width:0%"></i></div>
+    <p class="note">This counts steps, not effort: the training phases are larger than the data steps, so the share of work done is smaller than the share of steps. Estimates are planning guesses; the Actual column stays empty until a real time is known.</p>
+  </section>
+
+  <nav class="map" id="map" aria-label="Phases"></nav>
+  <div id="phases" style="display:flex;flex-direction:column;gap:14px"></div>
+
+  <footer class="foot">
+    <span>Done = finished and run on real data in the notebook. Phase 0 steps so far ran on 5 rows only; nothing has run on the full stream yet.</span>
+    <span>GPU time is not estimated until the first training run (E1) is measured.</span>
+  </footer>
+</div>
+
+<script>
+var PHASES = [
+  { id: "p0", name: "Foundations and data", est: "6–8 sessions", steps: [
+    ["L1", "Lesson 1: data origin, vote bias, contamination, licence", "done", "—"],
+    ["V", "Verify datasets, library versions, TRL", "done", "1 session"],
+    ["L2", "Lesson 2: cleaning and leakage-free splitting", "done", "1 session"],
+    ["S", "Kaggle notebook setup (GPU, internet, save folder)", "done", "30 min"],
+    ["1", "Look at the raw data", "done", "15 min"],
+    ["2", "Find the site of each question", "done", "15 min"],
+    ["3", "Count tokens in an answer", "done", "20 min"],
+    ["4", "Filter by length", "done", "20 min"],
+    ["5", "Filter other bad rows (empty, identical, link-only)", "done", "20 min"],
+    ["6", "Keep one pair per question", "done", "20 min"],
+    ["7", "Keep only technical sites (10-site list)", "done", "20 min"],
+    ["8", "Remove near-duplicate questions", "todo", "40 min"],
+    ["9", "Split into sft / pref / val / test by question", "todo", "30 min"],
+    ["10", "Check for leakage", "todo", "20 min"],
+    ["11", "Run on the full stream and save the files", "todo", "40 min"],
+    ["12", "Move notebook logic into src/, a config and a script; add tests", "todo", "1–2 sessions"],
+    ["13", "Pin library versions in requirements.txt", "todo", "20 min"]
+  ]},
+  { id: "p1", name: "Baseline and instruction tuning", est: "6–9 sessions", steps: [
+    ["E0", "Evaluation basics, then baseline of the untrained model", "todo", "2–3 sessions"],
+    ["L", "Lesson: instruction tuning, chat template, loss masking", "todo", "1 session"],
+    ["L", "Lesson: LoRA maths, fp16 on a T4, checkpoint and resume", "todo", "1 session"],
+    ["E1", "Instruction tuning with LoRA", "todo", "1–2 sessions"],
+    ["L", "Lesson: quantisation and QLoRA", "todo", "1 session"],
+    ["E2", "Instruction tuning with QLoRA, compared with E1", "todo", "1–2 sessions"]
+  ]},
+  { id: "p2", name: "Ablations", est: "3–4 sessions", steps: [
+    ["E3a", "LoRA rank 4 / 8 / 16", "todo", "1 session"],
+    ["E3b", "Data size 1k / 3k / 5k", "todo", "1 session"],
+    ["E3c", "Epochs 1–3", "todo", "1 session"],
+    ["E3d", "DoRA and IA3", "todo", "1 session"]
+  ]},
+  { id: "p3", name: "Preference alignment", est: "5–7 sessions", steps: [
+    ["L", "Lesson: RLHF pipeline, Bradley-Terry, DPO derivation", "todo", "1 session"],
+    ["E4", "DPO from the SFT adapter, 2–3 beta values", "todo", "2–3 sessions"],
+    ["L", "Lesson: reward models", "todo", "1 session"],
+    ["E5", "Reward model on a 150–200M encoder", "todo", "1–2 sessions"]
+  ]},
+  { id: "p4", name: "PPO", est: "4–6 sessions", steps: [
+    ["L", "Lesson: policy gradients, advantage, PPO objective, KL penalty", "todo", "1–2 sessions"],
+    ["E6", "Miniature PPO with a custom loop (0.5B fallback if needed)", "todo", "2–3 sessions"],
+    ["E7", "DPO vs PPO comparison", "todo", "1 session"]
+  ]},
+  { id: "p5", name: "Evaluation and MLOps", est: "5–7 sessions", steps: [
+    ["E8", "Final evaluation, error analysis, error taxonomy", "todo", "2–3 sessions"],
+    ["M", "Weights & Biases tracking", "todo", "1 session"],
+    ["M", "Hugging Face Hub: dataset and adapter cards, versioning", "todo", "1 session"],
+    ["M", "GitHub Actions (CPU tests, linting) and the evaluation gate", "todo", "1–2 sessions"]
+  ]},
+  { id: "p6", name: "Serving and demo", est: "4–5 sessions", steps: [
+    ["S", "FastAPI in Docker with per-request logging", "todo", "1–2 sessions"],
+    ["D", "Gradio demo on Spaces: swap base / SFT / DPO / PPO adapters", "todo", "1–2 sessions"],
+    ["R", "README with real results, limits, licence note", "todo", "1 session"],
+    ["I", "Interview question bank", "todo", "1 session"]
+  ]}
+];
+
+var LABEL = { done: "✓ done", doing: "● in progress", todo: "○ todo" };
+
+function count(steps, status) {
+  return steps.filter(function (s) { return s[2] === status; }).length;
+}
+function esc(t) {
+  return String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+var total = 0, done = 0;
+PHASES.forEach(function (p) { total += p.steps.length; done += count(p.steps, "done"); });
+document.getElementById("doneCount").textContent = done;
+document.getElementById("totalCount").textContent = total;
+var pct = total ? Math.round(done / total * 100) : 0;
+document.getElementById("overallFill").style.width = pct + "%";
+document.getElementById("overallBar").setAttribute("aria-valuenow", pct);
+
+var current = PHASES.findIndex(function (p) { return count(p.steps, "done") < p.steps.length; });
+
+document.getElementById("map").innerHTML = PHASES.map(function (p, i) {
+  var d = count(p.steps, "done"), n = p.steps.length;
+  return '<a class="tile' + (i === current ? " active" : "") + '" href="#' + p.id + '" data-target="' + p.id + '">' +
+    '<span class="label">Phase ' + i + '</span><span class="name">' + esc(p.name) + '</span>' +
+    '<span class="bar"><i style="width:' + Math.round(d / n * 100) + '%"></i></span>' +
+    '<span class="meta">' + d + ' / ' + n + ' steps</span></a>';
+}).join("");
+
+document.getElementById("phases").innerHTML = PHASES.map(function (p, i) {
+  var d = count(p.steps, "done"), n = p.steps.length;
+  var rows = p.steps.map(function (s) {
+    return '<div class="step"><span class="chip ' + s[2] + '">' + LABEL[s[2]] + '</span>' +
+      '<span class="num">' + esc(s[0]) + '</span>' +
+      '<span class="what">' + esc(s[1]) + '</span>' +
+      '<span class="est">' + esc(s[3]) + '</span>' +
+      '<span class="act">—</span></div>';
+  }).join("");
+  return '<details class="phase" id="' + p.id + '"' + (i === current ? " open" : "") + '>' +
+    '<summary><h2>Phase ' + i + ': ' + esc(p.name) + '</h2>' +
+    '<span class="sum">' + d + ' / ' + n + ' done &middot; est ' + esc(p.est) + '</span></summary>' +
+    '<div class="steps"><div class="step head label"><span>Status</span><span>Step</span><span>What</span><span>Estimate</span><span>Actual</span></div>' + rows + '</div></details>';
+}).join("");
+
+document.getElementById("map").addEventListener("click", function (e) {
+  var a = e.target.closest("a[data-target]");
+  if (!a) return;
+  e.preventDefault();
+  var el = document.getElementById(a.getAttribute("data-target"));
+  if (el) { el.open = true; el.scrollIntoView({ behavior: "smooth", block: "start" }); }
+});
+</script>
