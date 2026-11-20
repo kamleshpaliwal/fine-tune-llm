@@ -78,7 +78,7 @@ h1 { font-size: clamp(26px, 5vw, 38px); line-height: 1.1; letter-spacing: -0.02e
 .phase h2 { font-size: 18px; flex: 1 1 260px; min-width: 0; }
 .phase .sum { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .steps { border-top: 1px solid var(--line); }
-.step { display: grid; grid-template-columns: 112px 44px minmax(0, 1fr) 92px 62px; gap: 6px 14px; align-items: baseline; padding: 11px 18px; border-bottom: 1px solid var(--line); }
+.step { display: grid; grid-template-columns: 112px 44px minmax(0, 1fr) 92px; gap: 6px 14px; align-items: baseline; padding: 11px 18px; border-bottom: 1px solid var(--line); }
 .step:last-child { border-bottom: 0; }
 .step.head { padding-block: 8px; }
 .step .what { min-width: 0; overflow-wrap: anywhere; }
@@ -93,10 +93,9 @@ h1 { font-size: clamp(26px, 5vw, 38px); line-height: 1.1; letter-spacing: -0.02e
   .step { grid-template-columns: auto auto 1fr; }
   .step.head { display: none; }
   .step .what { grid-column: 1 / -1; }
-  .step .est, .step .act { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+  .step .est { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
   .step .est { grid-column: 1 / 3; }
   .step .est::before { content: "est "; }
-  .step .act::before { content: "actual "; }
 }
 .foot { color: var(--muted); font-size: 13px; display: flex; flex-direction: column; gap: 6px; }
 @media (prefers-reduced-motion: no-preference) { .bar > i { transition: width .4s ease; } }
@@ -115,7 +114,7 @@ h1 { font-size: clamp(26px, 5vw, 38px); line-height: 1.1; letter-spacing: -0.02e
       <div class="label">Estimate: about 33&ndash;46 sessions of ~2 h</div>
     </div>
     <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="overallBar"><i id="overallFill" style="width:0%"></i></div>
-    <p class="note">This counts steps, not effort: the training phases are larger than the data steps, so the share of work done is smaller than the share of steps. Estimates are planning guesses; the Actual column stays empty until a real time is known.</p>
+    <p class="note">This counts steps, not effort: the training phases are larger than the data steps, so the share of work done is smaller than the share of steps. Estimates are planning guesses.</p>
   </section>
 
   <nav class="map" id="map" aria-label="Phases"></nav>
@@ -220,13 +219,12 @@ document.getElementById("phases").innerHTML = PHASES.map(function (p, i) {
     return '<div class="step"><span class="chip ' + s[2] + '">' + LABEL[s[2]] + '</span>' +
       '<span class="num">' + esc(s[0]) + '</span>' +
       '<span class="what">' + esc(s[1]) + '</span>' +
-      '<span class="est">' + esc(s[3]) + '</span>' +
-      '<span class="act">—</span></div>';
+      '<span class="est">' + esc(s[3]) + '</span></div>';
   }).join("");
   return '<details class="phase" id="' + p.id + '"' + (i === current ? " open" : "") + '>' +
     '<summary><h2>Phase ' + i + ': ' + esc(p.name) + '</h2>' +
     '<span class="sum">' + d + ' / ' + n + ' done &middot; est ' + esc(p.est) + '</span></summary>' +
-    '<div class="steps"><div class="step head label"><span>Status</span><span>Step</span><span>What</span><span>Estimate</span><span>Actual</span></div>' + rows + '</div></details>';
+    '<div class="steps"><div class="step head label"><span>Status</span><span>Step</span><span>What</span><span>Estimate</span></div>' + rows + '</div></details>';
 }).join("");
 
 document.getElementById("map").addEventListener("click", function (e) {

@@ -7,8 +7,7 @@ Technical Q&A assistant: how far can Qwen2.5-1.5B-Instruct be improved for Stack
 **How to read this file**
 - **Status:** `done`, `in progress`, `todo`.
 - **Estimate** is a planning guess made before the work, not a measurement. One session is about 2 hours of your time.
-- **Actual** stays `-` until the real time is known. We never fill it with a guess.
-- When a step is finished, update its status (and Actual, if you know it) in this file.
+- When a step is finished, update its status in this file.
 
 ## Phases at a glance
 
@@ -29,82 +28,82 @@ GPU time is not estimated yet. It will be measured after the first training run 
 
 ## Phase 0: Foundations and data pipeline
 
-| Step | What | Status | Estimate | Actual |
-|---|---|---|---|---|
-| L1 | Lesson 1: data origin, vote bias, contamination, licence, LoRA vs freezing | done | - | - |
-| V | Verify datasets, library versions, TRL (no PPO; DPO with adapter reference) | done | 1 session | - |
-| L2 | Lesson 2: cleaning and leakage-free splitting | done | 1 session | - |
-| S | Notebook setup on Kaggle (GPU, internet, save folder) | done | 30 min | - |
-| 1 | Look at the raw data | done | 15 min | - |
-| 2 | Find the site of each question | done | 15 min | - |
-| 3 | Count tokens in an answer | done | 20 min | - |
-| 4 | Filter by length | done | 20 min | - |
-| 5 | Filter out other bad rows (empty, identical, link-only) | done | 20 min | - |
-| 6 | Keep one pair per question | done | 20 min | - |
-| 7 | Keep only technical sites (10-site list) | done | 20 min | - |
-| 8 | Remove near-duplicate questions | todo | 40 min | - |
-| 9 | Split into sft / pref / val / test by question | todo | 30 min | - |
-| 10 | Check for leakage | todo | 20 min | - |
-| 11 | Run on the full stream and save the files (with real counts) | todo | 40 min | - |
-| 12 | Move the notebook logic into `src/`, a config and a script; add tests | todo | 1-2 sessions | - |
-| 13 | Version pins in `requirements.txt` (after training libraries are installed) | todo | 20 min | - |
+| Step | What | Status | Estimate |
+|---|---|---|---|
+| L1 | Lesson 1: data origin, vote bias, contamination, licence, LoRA vs freezing | done | - |
+| V | Verify datasets, library versions, TRL (no PPO; DPO with adapter reference) | done | 1 session |
+| L2 | Lesson 2: cleaning and leakage-free splitting | done | 1 session |
+| S | Notebook setup on Kaggle (GPU, internet, save folder) | done | 30 min |
+| 1 | Look at the raw data | done | 15 min |
+| 2 | Find the site of each question | done | 15 min |
+| 3 | Count tokens in an answer | done | 20 min |
+| 4 | Filter by length | done | 20 min |
+| 5 | Filter out other bad rows (empty, identical, link-only) | done | 20 min |
+| 6 | Keep one pair per question | done | 20 min |
+| 7 | Keep only technical sites (10-site list) | done | 20 min |
+| 8 | Remove near-duplicate questions | todo | 40 min |
+| 9 | Split into sft / pref / val / test by question | todo | 30 min |
+| 10 | Check for leakage | todo | 20 min |
+| 11 | Run on the full stream and save the files (with real counts) | todo | 40 min |
+| 12 | Move the notebook logic into `src/`, a config and a script; add tests | todo | 1-2 sessions |
+| 13 | Version pins in `requirements.txt` (after training libraries are installed) | todo | 20 min |
 
 Note: the steps above were each run on only 5 rows. Nothing has been run on the full stream yet.
 
 ## Phase 1: Baseline and instruction tuning
 
-| Step | What | Status | Estimate | Actual |
-|---|---|---|---|---|
-| E0 | Evaluation basics, then baseline of the untrained model on the test set | todo | 2-3 sessions | - |
-| L | Lesson: instruction tuning, chat template, loss masking | todo | 1 session | - |
-| L | Lesson: LoRA maths, fp16 on a T4, checkpoint and resume | todo | 1 session | - |
-| E1 | Instruction tuning with LoRA | todo | 1-2 sessions | - |
-| L | Lesson: quantisation and QLoRA | todo | 1 session | - |
-| E2 | Instruction tuning with QLoRA, compared with E1 | todo | 1-2 sessions | - |
+| Step | What | Status | Estimate |
+|---|---|---|---|
+| E0 | Evaluation basics, then baseline of the untrained model on the test set | todo | 2-3 sessions |
+| L | Lesson: instruction tuning, chat template, loss masking | todo | 1 session |
+| L | Lesson: LoRA maths, fp16 on a T4, checkpoint and resume | todo | 1 session |
+| E1 | Instruction tuning with LoRA | todo | 1-2 sessions |
+| L | Lesson: quantisation and QLoRA | todo | 1 session |
+| E2 | Instruction tuning with QLoRA, compared with E1 | todo | 1-2 sessions |
 
 ## Phase 2: Ablations (E3)
 
-| Step | What | Status | Estimate | Actual |
-|---|---|---|---|---|
-| E3a | LoRA rank 4 / 8 / 16 | todo | 1 session | - |
-| E3b | Data size 1k / 3k / 5k | todo | 1 session | - |
-| E3c | Epochs 1-3 | todo | 1 session | - |
-| E3d | DoRA and IA3 | todo | 1 session | - |
+| Step | What | Status | Estimate |
+|---|---|---|---|
+| E3a | LoRA rank 4 / 8 / 16 | todo | 1 session |
+| E3b | Data size 1k / 3k / 5k | todo | 1 session |
+| E3c | Epochs 1-3 | todo | 1 session |
+| E3d | DoRA and IA3 | todo | 1 session |
 
 ## Phase 3: Preference alignment
 
-| Step | What | Status | Estimate | Actual |
-|---|---|---|---|---|
-| L | Lesson: RLHF pipeline, Bradley-Terry, DPO derivation | todo | 1 session | - |
-| E4 | DPO from the SFT adapter, 2-3 beta values | todo | 2-3 sessions | - |
-| L | Lesson: reward models | todo | 1 session | - |
-| E5 | Reward model on a 150-200M encoder | todo | 1-2 sessions | - |
+| Step | What | Status | Estimate |
+|---|---|---|---|
+| L | Lesson: RLHF pipeline, Bradley-Terry, DPO derivation | todo | 1 session |
+| E4 | DPO from the SFT adapter, 2-3 beta values | todo | 2-3 sessions |
+| L | Lesson: reward models | todo | 1 session |
+| E5 | Reward model on a 150-200M encoder | todo | 1-2 sessions |
 
 ## Phase 4: PPO
 
-| Step | What | Status | Estimate | Actual |
-|---|---|---|---|---|
-| L | Lesson: policy gradients, advantage, PPO objective, KL penalty | todo | 1-2 sessions | - |
-| E6 | Miniature PPO / RLHF with a custom loop (0.5B fallback if needed) | todo | 2-3 sessions | - |
-| E7 | DPO vs PPO comparison | todo | 1 session | - |
+| Step | What | Status | Estimate |
+|---|---|---|---|
+| L | Lesson: policy gradients, advantage, PPO objective, KL penalty | todo | 1-2 sessions |
+| E6 | Miniature PPO / RLHF with a custom loop (0.5B fallback if needed) | todo | 2-3 sessions |
+| E7 | DPO vs PPO comparison | todo | 1 session |
 
 ## Phase 5: Evaluation and MLOps
 
-| Step | What | Status | Estimate | Actual |
-|---|---|---|---|---|
-| E8 | Final evaluation, error analysis, error taxonomy | todo | 2-3 sessions | - |
-| M | Weights & Biases tracking | todo | 1 session | - |
-| M | Hugging Face Hub: dataset and adapter cards, versioning | todo | 1 session | - |
-| M | GitHub Actions (tests and linting on CPU) and the evaluation gate | todo | 1-2 sessions | - |
+| Step | What | Status | Estimate |
+|---|---|---|---|
+| E8 | Final evaluation, error analysis, error taxonomy | todo | 2-3 sessions |
+| M | Weights & Biases tracking | todo | 1 session |
+| M | Hugging Face Hub: dataset and adapter cards, versioning | todo | 1 session |
+| M | GitHub Actions (tests and linting on CPU) and the evaluation gate | todo | 1-2 sessions |
 
 ## Phase 6: Serving and demo
 
-| Step | What | Status | Estimate | Actual |
-|---|---|---|---|---|
-| S | FastAPI in Docker with per-request logging | todo | 1-2 sessions | - |
-| D | Gradio demo on Hugging Face Spaces (swap base / SFT / DPO / PPO adapters) | todo | 1-2 sessions | - |
-| R | README with real results, limits, licence note | todo | 1 session | - |
-| I | Interview question bank across all topics | todo | 1 session | - |
+| Step | What | Status | Estimate |
+|---|---|---|---|
+| S | FastAPI in Docker with per-request logging | todo | 1-2 sessions |
+| D | Gradio demo on Hugging Face Spaces (swap base / SFT / DPO / PPO adapters) | todo | 1-2 sessions |
+| R | README with real results, limits, licence note | todo | 1 session |
+| I | Interview question bank across all topics | todo | 1 session |
 
 ---
 
