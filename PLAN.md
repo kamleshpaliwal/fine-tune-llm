@@ -2,7 +2,7 @@
 
 Technical Q&A assistant: how far can Qwen2.5-1.5B-Instruct be improved for Stack Exchange answers, with PEFT only, on a free 16 GB T4 (running on Kaggle)?
 
-**Last updated:** 2026-11-19
+**Last updated:** 2026-11-21
 
 **How to read this file**
 - **Status:** `done`, `in progress`, `todo`.
@@ -41,7 +41,7 @@ GPU time is not estimated yet. It will be measured after the first training run 
 | 5 | Filter out other bad rows (empty, identical, link-only) | done | 20 min |
 | 6 | Keep one pair per question | done | 20 min |
 | 7 | Keep only technical sites (10-site list) | done | 20 min |
-| 8 | Remove near-duplicate questions | todo | 40 min |
+| 8 | Remove near-duplicate questions (8a shingles, 8b Jaccard, 8c MinHash, 8d LSH, 8e plug in) | done | 40 min |
 | 9 | Split into sft / pref / val / test by question | todo | 30 min |
 | 10 | Check for leakage | todo | 20 min |
 | 11 | Run on the full stream and save the files (with real counts) | todo | 40 min |
@@ -116,4 +116,5 @@ Note: the steps above were each run on only 5 rows. Nothing has been run on the 
 - Check questions are asked in the chat, not written in the notebook.
 - Verified (2026-11-18): TRL 1.18 has no PPO trainer, so PPO is a custom loop. DPO accepts a trained adapter as the model and creates its own frozen "ref" copy.
 - Allowed sites (Step 7): stackoverflow, superuser, serverfault, askubuntu, unix, softwareengineering, dba, datascience, stats, security. A setting that can be changed.
+- Near-duplicate rule (Step 8): Jaccard 0.8 on 5-word shingles, 128-number MinHash, 32 bands of 4. A setting that can be changed.
 - Proposed, not yet built: four question-disjoint splits (sft, pref, val, test), one pair kept per question.
